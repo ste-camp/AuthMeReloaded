@@ -1,6 +1,7 @@
 package fr.xephi.authme.security;
 
 import fr.xephi.authme.security.crypts.EncryptionMethod;
+import fr.xephi.authme.security.crypts.PhPass;
 
 /**
  * Hash algorithms supported by AuthMe.
@@ -32,6 +33,7 @@ public enum HashAlgorithm {
     WORDPRESS(fr.xephi.authme.security.crypts.Wordpress.class),
     XAUTH(fr.xephi.authme.security.crypts.XAuth.class),
     XFBCRYPT(fr.xephi.authme.security.crypts.XfBCrypt.class),
+    PHPASS(fr.xephi.authme.security.crypts.PhPass.class),
     CUSTOM(null),
 
     @Deprecated DOUBLEMD5(fr.xephi.authme.security.crypts.DoubleMd5.class),
