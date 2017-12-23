@@ -1,6 +1,7 @@
 package fr.xephi.authme.security;
 
 import ch.jalu.injector.factory.Factory;
+import fr.xephi.authme.ConsoleLogger;
 import fr.xephi.authme.datasource.DataSource;
 import fr.xephi.authme.events.PasswordEncryptionEvent;
 import fr.xephi.authme.initialization.Reloadable;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.PluginManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.Console;
 import java.util.Collection;
 
 /**
@@ -41,7 +43,9 @@ public class PasswordSecurity implements Reloadable {
     @Override
     public void reload() {
         HashAlgorithm algorithm = settings.getProperty(SecuritySettings.PASSWORD_HASH);
+        ConsoleLogger.debug("Using Hash Algorithm: ".concat(algorithm.toString()));
         this.encryptionMethod = initializeEncryptionMethodWithEvent(algorithm);
+        ConsoleLogger.debug("EncryptionMethod Class: ".concat(this.encryptionMethod.getClass().getName()));
         this.legacyAlgorithms = settings.getProperty(SecuritySettings.LEGACY_HASHES);
     }
 
@@ -121,6 +125,13 @@ public class PasswordSecurity implements Reloadable {
      */
     private static boolean methodMatches(EncryptionMethod method, String password,
                                          HashedPassword hashedPassword, String playerName) {
+        if(method==null){
+            ConsoleLogger.debug("EncryptionMethod is null!");
+        }
+        else {
+            ConsoleLogger.debug("Using EncryptionMethod: ".concat(method.getClass().getName()));
+        }
+
         return method != null && (!method.hasSeparateSalt() || hashedPassword.getSalt() != null)
             && method.comparePassword(password, hashedPassword, playerName);
     }

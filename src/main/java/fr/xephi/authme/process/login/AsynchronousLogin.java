@@ -147,6 +147,9 @@ public class AsynchronousLogin implements AsynchronousProcess {
         if (!event.canLogin()) {
             return null;
         }
+
+        ConsoleLogger.debug("Login Preconditions verified!");
+
         return auth;
     }
 

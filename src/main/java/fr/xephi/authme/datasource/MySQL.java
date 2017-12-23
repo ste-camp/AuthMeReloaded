@@ -14,6 +14,7 @@ import fr.xephi.authme.settings.properties.HooksSettings;
 import fr.xephi.authme.util.StringUtils;
 import fr.xephi.authme.util.Utils;
 
+import java.io.Console;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -295,16 +296,21 @@ public class MySQL implements DataSource {
 
     @Override
     public PlayerAuth getAuth(String user) {
+        ConsoleLogger.debug("Checking user auth data: ".concat(user));
         String sql = "SELECT * FROM " + tableName + " WHERE " + col.NAME + "=?;";
         PlayerAuth auth;
         try (Connection con = getConnection(); PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setString(1, user.toLowerCase());
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
+                    ConsoleLogger.debug("Auth information found for user ".concat(user));
                     int id = rs.getInt(col.ID);
                     auth = buildAuthFromResultSet(rs);
                     sqlExtension.extendAuth(auth, id, con);
                     return auth;
+                }
+                else{
+                    ConsoleLogger.debug("No user auth found for ".concat(user));
                 }
             }
         } catch (SQLException ex) {
